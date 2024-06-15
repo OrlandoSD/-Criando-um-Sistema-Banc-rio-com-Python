@@ -1,0 +1,23 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
+
+h1 {
+    color: #333;
+}
+
+button {
+    margin: 5px;
+    padding: 10px 15px;
+    font-size: 16px;
+}
+
+#form-container {
+    margin: 20px 0;
+}
+
+#result {
+    margin-top: 20px;
+    font-size: 18px;
+}

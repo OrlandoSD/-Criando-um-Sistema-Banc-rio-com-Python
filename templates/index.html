@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Banco</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Sistema Bancário</h1>
+    <div>
+        <button onclick="showDepositForm()">Depositar</button>
+        <button onclick="showWithdrawForm()">Sacar</button>
+        <button onclick="showExtrato()">Extrato</button>
+        <button onclick="exit()">Sair</button>
+    </div>
+    <div id="form-container"></div>
+    <div id="result"></div>
+
+    <script>
+        function showDepositForm() {
+            document.getElementById('form-container').innerHTML = `
+                <h2>Depósito</h2>
+                <input type="number" id="deposit-value" placeholder="Valor">
+                <button onclick="depositar()">Confirmar</button>
+            `;
+        }
+
+        function showWithdrawForm() {
+            document.getElementById('form-container').innerHTML = `
+                <h2>Saque</h2>
+                <input type="number" id="withdraw-value" placeholder="Valor">
+                <button onclick="sacar()">Confirmar</button>
+            `;
+        }
+
+        function depositar() {
+            const valor = document.getElementById('deposit-value').value;
+            fetch('/depositar', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ valor: parseFloat(valor) })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('result').innerHTML = data.mensagem;
+            });
+        }
+
+        function sacar() {
+            const valor = document.getElementById('withdraw-value').value;
+            fetch('/sacar', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ valor: parseFloat(valor) })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('result').innerHTML = data.mensagem;
+            });
+        }
+
+        function showExtrato() {
+            fetch('/extrato')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('result').innerHTML = `
+                    <h2>Extrato</h2>
+                    <pre>${data.extrato}</pre>
+                    <p>Saldo: R$ ${data.saldo.toFixed(2)}</p>
+                `;
+            });
+        }
+
+        function exit() {
+            document.getElementById('result').innerHTML = 'Sessão encerrada.';
+        }
+    </script>
+</body>
+</html>
